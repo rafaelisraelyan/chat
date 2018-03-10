@@ -7,9 +7,9 @@ public interface TCPConnectionListner {
     void onDisconnect(TCPConnection topConnectoin);
     void onException(TCPConnection topConnectoin,Exception e);
     
-    void onConnectionReady(SendString topConnectoin,String Name);
-    void onConnectionReady(SendString topConnectoin);
-    String onReceiveString(SendString topConnectoin,String value);
-    void onDisconnect(SendString topConnectoin);
-    void onException(SendString topConnectoin,Exception e);
+    void onConnectionReady(SendFile topConnectoin,String Name);
+    void onConnectionReady(SendFile topConnectoin);
+    String onReceiveString(SendFile topConnectoin,String value);
+    void onDisconnect(SendFile topConnectoin);
+    void onException(SendFile topConnectoin,Exception e);
 }

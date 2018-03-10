@@ -2,6 +2,8 @@ package rafa.client.chat;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,7 +16,7 @@ import rafa.client.chat.LoginEror;
 import static rafa.client.chat.Login.eror;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import rafa.network.SendString;
+import rafa.network.SendFile;
 import rafa.network.TCPConnection;
 import rafa.network.TCPConnectionListner;
 
@@ -42,7 +44,7 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 	private JFileChooser f = new JFileChooser();
 	
     private TCPConnection connection;
-    private SendString sendFile;
+    // TODO private SendFile sendFile;
 
     public String getName() {
     	return Name;
@@ -119,6 +121,10 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
         btnSendFile.setIcon(imgSendFile);
         btnSendFile.setBounds(1,655,44,30);
 
+        
+        Image logo = Toolkit.getDefaultToolkit().getImage("img/logo16x16.png");
+        win.setIconImage(logo);
+        
 		PanelMain.add(scroll);
 		PanelMain.add(input);
 		PanelMain.add(btnSendString);
@@ -205,31 +211,31 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 	    }
 
 		@Override
-		public void onConnectionReady(SendString topConnectoin, String Name) {
+		public void onConnectionReady(SendFile topConnectoin, String Name) {
 			System.out.println("Функция отправки файла с названием работает!");
 
 		}
 
 		@Override
-		public void onConnectionReady(SendString topConnectoin) {
+		public void onConnectionReady(SendFile topConnectoin) {
 			System.out.println("Функция отправки файла без названием работает!");
 			
 		}
 
 		@Override
-		public String onReceiveString(SendString topConnectoin, String value) {
+		public String onReceiveString(SendFile topConnectoin, String value) {
 			printMsq(value);
 			return value;
 		}
 
 		@Override
-		public void onDisconnect(SendString topConnectoin) {
+		public void onDisconnect(SendFile topConnectoin) {
 			printMsq("Соединение прервано.");
 			
 		}
 
 		@Override
-		public void onException(SendString topConnectoin, Exception e) {
+		public void onException(SendFile topConnectoin, Exception e) {
 			printMsq("Ошибка соединения: " + e);
 			
 		}
@@ -242,33 +248,30 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 		        }
 		        input.setText(null);					
 		        
-		        if(Name == NickTop.getText()) {
+		        connection.sendString( "  " + Name + ": " + msq);
+				/* TODO if(NickTop.getText().equals(Name)) {//хз работает или нет //нет!Идея была простая:сообщения отправленные тобой в правой части приложения.Реализация ужас!
 		        	connection.sendString("\t\t\t" + msq);
 		        }else {
 		        connection.sendString( "  " + Name + ": " + msq);
-		        }
+		        }*/
 		 	}
 		 	
 		    private void send_File() {
-	    		try {
-					 	sendFile = new SendString(this,IP_ADDR,PORT);
-					} catch (IOException e1) {
-						printMsq("Ошибка отправки файла: " + e1);
-					}
-				try {
-					f.showOpenDialog(null);
-				    File file = f.getSelectedFile();	
-					String input = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));					
-					String msq = input;
-					if(msq.equals("")) {	        	
-						eror = "Файл Пуст";
-						new LoginEror();
-						return;
-					}
-
-			        sendFile.sendFile( " " + Name + ": " + msq + "\n(Текст с файла)");
-
-				} catch (IOException e1) {
+		    		try {
+					 	//sendFile = new SendFile(this,IP_ADDR,PORT);	
+					 	f.showOpenDialog(null);
+					 	File file = f.getSelectedFile();	
+					 	String input = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+					 	if(input.equals("")) {	        	
+					 		eror = "Файл Пуст";
+					 		new LoginEror();
+					 		return;
+					 	}else {
+					 		connection.sendString( "  " + Name + ": " + input + "\n(Текст с файла)");
+					 		// TODO sendFile.sendFile(input);
+					 	}
+					 	
+	    		 } catch (IOException e1) {
 					e1.printStackTrace();
 				}
 	        }
