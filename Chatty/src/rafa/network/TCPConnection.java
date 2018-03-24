@@ -3,9 +3,7 @@ package rafa.network;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
-//import rafa.network.SendString;
-//import javax.swing.JFileChooser;
-import static rafa.client.chat.Client.Name;
+
 
 public class TCPConnection {    
 	private final TCPConnectionListner eventListner;
@@ -13,15 +11,16 @@ public class TCPConnection {
     private final Thread rxThread;
     private BufferedReader in;
     private BufferedWriter out;
-	//private JFileChooser f = new JFileChooser();
-
-    public TCPConnection(TCPConnectionListner eventListner,String ipAddr,int port) throws IOException{
-        this(eventListner, new Socket(ipAddr,port));
+	private String Name;	
+	
+    public TCPConnection(TCPConnectionListner eventListner,String ipAddr,int port,String Name) throws IOException{
+        this(eventListner, new Socket(ipAddr,port),Name);
     }
 
-    public TCPConnection(TCPConnectionListner eventListner, Socket socket) throws IOException{
+    public TCPConnection(TCPConnectionListner eventListner, Socket socket,String Name) throws IOException{
         this.eventListner = eventListner;
         this.socket = socket;
+        this.Name = Name;
         in = new  BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
         out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), Charset.forName("UTF-8")));
 
@@ -29,7 +28,9 @@ public class TCPConnection {
             @Override
             public void run() {
                 try {
-                    eventListner.onConnectionReady(TCPConnection.this);
+                	
+                    eventListner.onConnectionReady(TCPConnection.this,Name);
+                    
                     while (!rxThread.isInterrupted()){
                         eventListner.onReceiveString(TCPConnection.this,in.readLine());
                     }
@@ -83,7 +84,7 @@ public class TCPConnection {
     @Override
     public String toString(){
         System.out.println("New uzer's" + ": " + socket.getPort());
-        return "TCPConnection: " + socket.getInetAddress() + ": " + socket.getPort() + "  " + Name;
+        return "TCPConnection: " + socket.getInetAddress() + ": " + socket.getPort() + "  " + this.Name;
     }
 
 /*	public void sendFile(String string) {

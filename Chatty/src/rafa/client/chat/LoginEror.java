@@ -12,7 +12,7 @@ public class LoginEror extends JFrame{
 	private static final long serialVersionUID = 1L;
 
 	private static final int WIDTH = 320;
-    private static final int HEIGHT = 100;
+    private static final int HEIGHT = 110;
     JPanel erorPanel = new JPanel();
     JLabel textEror = new JLabel("Login exeption!");
     JButton btn = new JButton("OK");
@@ -32,7 +32,7 @@ public class LoginEror extends JFrame{
         frame.setContentPane(erorPanel);
         
         erorPanel.setBorder(new EmptyBorder(1,1,1,1));
-        erorPanel.setBackground(Color.BLACK);
+        erorPanel.setBackground(new Color(0x232222));
         erorPanel.setForeground(Color.WHITE);
         erorPanel.setLayout(null);
         
@@ -43,8 +43,11 @@ public class LoginEror extends JFrame{
           erorPanel.add(textEror);
 
         btn.setBounds(115,45,70,25);
-        btn.setForeground(Color.BLACK);
-        btn.setBackground(Color.WHITE);
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(true);
+        btn.setFont(new Font("Arial",Font.BOLD,15));
+        btn.setBackground(new Color(0x6e6e6e));
+        btn.setForeground(Color.WHITE);
         erorPanel.add(btn);
 
         btn.addActionListener(new ActionListener() {

@@ -21,7 +21,10 @@ public class Login extends JFrame {
     private JLabel lblPort;
     private JLabel lblAddressDesc;
     private JLabel lblPortDesc;
+    private JButton btnLogin;
+    
     public String NickName;
+    
     
     public Login() {
 
@@ -30,14 +33,15 @@ public class Login extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Font font = new Font("Arial",Font.PLAIN,14);
+        
         setResizable(false);
         setTitle("Login");
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 380);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.setBackground(Color.BLACK);
+        contentPane.setBackground(new Color(0x232222));
         contentPane.setForeground(Color.WHITE);
         setContentPane(contentPane);
         contentPane.setLayout(null);
@@ -45,6 +49,10 @@ public class Login extends JFrame {
 
 
         txtName = new JTextField();
+        txtName.setBackground(new Color(0x232226));
+        txtName.setFont(font);
+        txtName.setForeground(Color.WHITE);
+        txtName.setCaretColor(getBackground());
         txtName.setBounds(79, 60, 142, 26);
         contentPane.add(txtName);
         txtName.setColumns(10);
@@ -59,12 +67,20 @@ public class Login extends JFrame {
         lblIpAddress.setForeground(Color.WHITE);
         contentPane.add(lblIpAddress);
 
-        txtAddress = new JTextField();
+        txtAddress = new JTextField();        
+        txtAddress.setBackground(new Color(0x232226));
+        txtAddress.setCaretColor(getBackground());
+        txtAddress.setFont(font);
+        txtAddress.setForeground(Color.WHITE);
         txtAddress.setBounds(79, 114, 142, 26);
         contentPane.add(txtAddress);
         txtAddress.setColumns(10);
 
         txtPort = new JTextField();
+        txtPort.setBackground(new Color(0x232226));
+        txtPort.setForeground(Color.WHITE);
+        txtPort.setFont(font);
+        txtPort.setCaretColor(getBackground());
         txtPort.setColumns(10);
         txtPort.setBounds(79, 184, 142, 26);
         contentPane.add(txtPort);
@@ -85,7 +101,12 @@ public class Login extends JFrame {
         lblPortDesc.setForeground(Color.WHITE);
         contentPane.add(lblPortDesc);
 
-        JButton btnLogin = new JButton("Login");
+        btnLogin = new JButton("Login");
+        btnLogin.setBackground(new Color(0x6e6e6e));
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setContentAreaFilled(false);
+        btnLogin.setOpaque(true);
+        btnLogin.setFont(new Font("Arial",Font.BOLD,18));
 
         btnLogin.addActionListener(new ActionListener() {
 
@@ -145,8 +166,6 @@ public class Login extends JFrame {
             }
         });
         btnLogin.setBounds(88, 300, 117, 29);
-        btnLogin.setBackground(Color.BLACK);
-        btnLogin.setForeground(Color.BLACK);
         contentPane.add(btnLogin);
     }
     
@@ -161,8 +180,7 @@ public class Login extends JFrame {
             public void run() {new Client();}
         });
 
-        //new ClientWindow();
-    }
+   }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {

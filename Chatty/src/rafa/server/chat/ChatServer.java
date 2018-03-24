@@ -1,7 +1,7 @@
 package rafa.server.chat;
 
 import rafa.network.TCPConnectionListner;
-import rafa.network.SendString;
+import rafa.network.SendFile;
 import rafa.network.TCPConnection;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,8 +16,9 @@ public class ChatServer implements TCPConnectionListner{
     
     public static int numberUsers = 0;
     private final ArrayList<TCPConnection> connections = new ArrayList<>();
+    String Name = "?";
     
-    public ChatServer() {
+		public ChatServer() {
             System.out.print("Введите порт будет работать сервер:");
             Scanner scanner_port = new Scanner(System.in);
             int port = scanner_port.nextInt();
@@ -26,7 +27,8 @@ public class ChatServer implements TCPConnectionListner{
             try (ServerSocket serverSocket = new ServerSocket(port);) {
                 while (true) {
                     try {
-                        new TCPConnection(this, serverSocket.accept());
+                        new TCPConnection(this, serverSocket.accept(),Name);
+                        
                     } catch (Exception e) {
                         System.out.println("TCPConnection exception: " + e);
                     }
@@ -34,28 +36,31 @@ public class ChatServer implements TCPConnectionListner{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+           
         }
-
         @Override
-        public synchronized void onConnectionReady (rafa.network.TCPConnection topConnectoin){
-            connections.add(topConnectoin);
+        public synchronized void onConnectionReady (rafa.network.TCPConnection topConnection,String Name){
+            connections.add(topConnection);
+            this.Name = Name;
+            for(int i = 0;i>= connections.size();i++) System.out.println(connections.get(i));
             numberUsers++;
-            //SendToAllConnections(Name + " зашёл в чат: " + topConnectoin + ".\n В чате " + numberUsers + " участников. ");
-            SendToAllConnections("\n \t В чате " + numberUsers + " участник(-ов). \n");
+            System.out.println("\t \t" + topConnection);
+            //SendToAllConnections(this.Name + " зашёл в чат: " + topConnectoin + ".\n В чате " + numberUsers + " участников. ");
+            SendToAllConnections("\n \t В чате " + connections.size() + " участник(-ов). \n");
 
         }
 
         @Override
-        public synchronized void onReceiveString (rafa.network.TCPConnection topConnectoin, String value){
-        	if(value == "/printUsers") {
-        		for(int i = 0;i>= connections.size();i++) System.out.println(topConnectoin);
+        public synchronized void onReceiveString (rafa.network.TCPConnection topConnection, String value){
+        	if(value.equals("/printUsers")) {
+        		for(int i = 0;i>= connections.size();i++) System.out.println(connections.get(i));
         	}
             SendToAllConnections(value);
         }
 
         @Override
-        public synchronized void onDisconnect (rafa.network.TCPConnection topConnectoin){
-            connections.remove(topConnectoin);
+        public synchronized void onDisconnect (rafa.network.TCPConnection topConnection){
+            connections.remove(topConnection);
             numberUsers--;
            // SendToAllConnections(Name + " вышел из чата:" + topConnectoin + ".\n В чате " + numberUsers + " участников.");
             SendToAllConnections("\n \t В чате " + numberUsers + " участник(-ов).\n");
@@ -63,42 +68,47 @@ public class ChatServer implements TCPConnectionListner{
         }
 
         @Override
-        public synchronized void onException (rafa.network.TCPConnection topConnectoin, Exception e){
+        public synchronized void onException (rafa.network.TCPConnection topConnection, Exception e){
             System.out.println("TCPConnection exception: " + e);
         }
 
-    private void SendToAllConnections(String value) {
-        System.out.println(value);
-        final int cnt = connections.size();
-        for (int i = 0; i < cnt; i++) connections.get(i).sendString(value);
-    }
-
-	@Override
-	public void onConnectionReady(SendString topConnectoin, String Name) {
-		System.out.println("Функция отправки файла c названием работает!");
+ 
+		@Override
+			public void onConnectionReady(SendFile topConnection, String Name) {
+				System.out.println("Функция отправки файла c названием работает!");
+				
+			}
 		
-	}
-
-	@Override
-	public void onConnectionReady(SendString topConnectoin) {
-		System.out.println("Функция отправки файла без названия работает!");
+			@Override
+			public void onConnectionReady(SendFile topConnection) {
+				System.out.println("Функция отправки файла без названия работает!");
+				
+			}
 		
-	}
-
-	@Override
-	public String onReceiveString(SendString topConnectoin, String value) {
-		SendToAllConnections(value);
-		return value;
-	}
-
-	@Override
-	public void onDisconnect(SendString topConnectoin) {
-		System.out.println("Произошло отключение от сети.");
-	}
-
-	@Override
-	public void onException(SendString topConnectoin, Exception e) {
-		System.out.println("Функция отправки файлов не работает:" + e);
+			@Override
+			public String onReceiveString(SendFile topConnection, String value) {
+				SendToAllConnections(value);
+				return value;
+			}
+		
+			@Override
+			public void onDisconnect(SendFile topConnection) {
+				System.out.println("Произошло отключение от сети.");
+			}
+		
+			@Override
+			public void onException(SendFile topConnection, Exception e) {
+				System.out.println("Функция отправки файлов не работает:" + e);
 	
 	}
+		   
+			
+
+
+		
+	    private void SendToAllConnections(String value) {
+	    	System.out.println(value);
+	    	final int cnt = connections.size();
+	    	for (int i = 0; i < cnt; i++) connections.get(i).sendString(value);
+	    }
 }

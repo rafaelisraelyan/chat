@@ -2,14 +2,14 @@ package rafa.network;
 
 public interface TCPConnectionListner {
 	
-    void onConnectionReady(TCPConnection topConnectoin);
-    void onReceiveString(TCPConnection topConnectoin,String value);
-    void onDisconnect(TCPConnection topConnectoin);
-    void onException(TCPConnection topConnectoin,Exception e);
+    void onConnectionReady(TCPConnection topConnection,String Name);
+    void onReceiveString(TCPConnection topConnection,String value);
+    void onDisconnect(TCPConnection topConnection);
+    void onException(TCPConnection topConnection,Exception e);
     
-    void onConnectionReady(SendString topConnectoin,String Name);
-    void onConnectionReady(SendString topConnectoin);
-    String onReceiveString(SendString topConnectoin,String value);
-    void onDisconnect(SendString topConnectoin);
-    void onException(SendString topConnectoin,Exception e);
+    void onConnectionReady(SendFile topConnection,String Name);
+    void onConnectionReady(SendFile topConnection);
+    String onReceiveString(SendFile topConnection,String value);
+    void onDisconnect(SendFile topConnection);
+    void onException(SendFile topConnection,Exception e);
 }

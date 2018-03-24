@@ -2,6 +2,8 @@ package rafa.client.chat;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,9 +16,10 @@ import rafa.client.chat.LoginEror;
 import static rafa.client.chat.Login.eror;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import rafa.network.SendString;
+import rafa.network.SendFile;
 import rafa.network.TCPConnection;
 import rafa.network.TCPConnectionListner;
+import static rafa.client.chat.MyAccount.NameUsers;
 
 public class Client extends JFrame implements ActionListener,TCPConnectionListner{
 	/**
@@ -36,17 +39,15 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 	private JPanel PanelMain = new JPanel();
 	private JScrollPane scroll;
 	private JButton btnSendString;
-	public static JLabel NickTop;
+	public static JButton NickTop;
 	private JLabel UsOnly;
 	private JLabel typeMessenge;
 	private JFileChooser f = new JFileChooser();
 	
     private TCPConnection connection;
-    private SendString sendFile;
+    // TODO private SendFile sendFile;
 
-    public String getName() {
-    	return Name;
-    }
+
     
 	public Client() {	
 
@@ -65,16 +66,16 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 
 		typeMessenge = new JLabel("Общий Чат");
 		UsOnly = new JLabel("");
-		NickTop = new JLabel(" \t " + Name);
+		NickTop = new JButton(" \t " + Name);
 		Font font = new Font("Arial", Font.BOLD, 18);
 		
 		win.setResizable(false);
-		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		win.setSize(WIDTH, HEIGHT);
 		win.setLocationRelativeTo(null);
-		win.setBackground(Color.BLACK);
+		win.setBackground(new Color(0x232222));
 		
-		log.setBackground(Color.BLACK);
+		log.setBackground(new Color(0x232222));
 		log.setForeground(Color.WHITE);
 		log.setFont(font);
 		log.setEnabled(false);
@@ -93,12 +94,15 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
         
         NickTop.setFont(new Font("Sans-serif",Font.BOLD,17));
         NickTop.setForeground(Color.WHITE);
-        NickTop.setBounds(385, 0, 150, 30);
+        NickTop.setBounds(385, 0, 150, 29);
+        NickTop.setBackground(new Color(0x232222));		
+        NickTop.setContentAreaFilled(false);
+		NickTop.setOpaque(true);
         NickTop.setBorder(new LineBorder (Color.WHITE,1));
         PanelMain.add(NickTop);
         
         input.setFont(font);
-        input.setBackground(Color.BLACK);
+        input.setBackground(new Color(0x232222));
 		input.setForeground(Color.WHITE);
         input.addActionListener(this);
         input.setBounds(47, 655, 455, 30);
@@ -106,25 +110,39 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 
         PanelMain.setBorder(new EmptyBorder(5,5,5,5));
         PanelMain.setLayout(null);
-        PanelMain.setBackground(Color.BLACK);
+        PanelMain.setBackground(new Color(0x232222));
         PanelMain.setForeground(Color.WHITE);
         win.setContentPane(PanelMain);
         
         ImageIcon imgSendString = createIcon("img/imgSendString.png");
 		btnSendString.setIcon(imgSendString);
-        btnSendString.setBackground(Color.BLACK);
+
+        btnSendString.setBackground(new Color(0x232222));
         btnSendString.setBounds(502, 654,32, 32);
         
         ImageIcon imgSendFile = createIcon("img/imgSendFile.png");
         btnSendFile.setIcon(imgSendFile);
         btnSendFile.setBounds(1,655,44,30);
 
+        
+        Image logo = Toolkit.getDefaultToolkit().getImage("img/logo.png");
+        win.setIconImage(logo);
+        
 		PanelMain.add(scroll);
 		PanelMain.add(input);
 		PanelMain.add(btnSendString);
 		PanelMain.add(btnSendFile);
 				
+		NickTop.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				NameUsers = Name;
+				new MyAccount();
+			}
 			
+		});	
+		
 		btnSendFile.addActionListener(new ActionListener() {
 			
 			@Override
@@ -143,7 +161,7 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 		});
 		
         	try {
-	            connection = new TCPConnection(this,IP_ADDR,PORT);
+	            connection = new TCPConnection(this,IP_ADDR,PORT,Name);
 	        } catch (IOException e) {
 	            printMsq("Ошибка соединения: " + e);
 	        }
@@ -151,8 +169,8 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 
 		win.setVisible(true);
 		
-	}
-        	    static ImageIcon createIcon(String path) {
+	}    
+        	 static ImageIcon createIcon(String path) {
 		        URL imgURL = Client.class.getResource(path);     
 		        if (imgURL != null) {
 		            return new ImageIcon(imgURL);
@@ -169,26 +187,26 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 
 	 	
 	    @Override
-	    public void onConnectionReady(TCPConnection topConnectoin) {
+	    public void onConnectionReady(TCPConnection topConnection,String Name) {
 	    	printMsq("Добро пожаловать в чат...");
 	    	connection.sendString(Name + " зашёл в чат \n");
 	        
 	    }
 
 	    @Override
-	    public void onReceiveString(TCPConnection topConnectoin, String value) {
+	    public void onReceiveString(TCPConnection topConnection, String value) {
 	        printMsq(value);
 	    }
 
 	   @Override
-	    public void onDisconnect(TCPConnection topConnectoin) {
+	    public void onDisconnect(TCPConnection topConnection) {
 		   
 	    	printMsq("Соединение прервано.");
 	    	}
 	    
 
 	    @Override
-	    public void onException(TCPConnection topConnectoin, Exception e) {
+	    public void onException(TCPConnection topConnection, Exception e) {
 	        printMsq("Ошибка соединения: " + e);
 	    }
 
@@ -205,31 +223,31 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 	    }
 
 		@Override
-		public void onConnectionReady(SendString topConnectoin, String Name) {
+		public void onConnectionReady(SendFile topConnection, String Name) {
 			System.out.println("Функция отправки файла с названием работает!");
 
 		}
 
 		@Override
-		public void onConnectionReady(SendString topConnectoin) {
+		public void onConnectionReady(SendFile topConnection) {
 			System.out.println("Функция отправки файла без названием работает!");
 			
 		}
 
 		@Override
-		public String onReceiveString(SendString topConnectoin, String value) {
+		public String onReceiveString(SendFile topConnection, String value) {
 			printMsq(value);
 			return value;
 		}
 
 		@Override
-		public void onDisconnect(SendString topConnectoin) {
+		public void onDisconnect(SendFile topConnection) {
 			printMsq("Соединение прервано.");
 			
 		}
 
 		@Override
-		public void onException(SendString topConnectoin, Exception e) {
+		public void onException(SendFile topConnection, Exception e) {
 			printMsq("Ошибка соединения: " + e);
 			
 		}
@@ -242,33 +260,30 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 		        }
 		        input.setText(null);					
 		        
-		        if(Name == NickTop.getText()) {
+		        connection.sendString( "  " + Name + ": " + msq);
+				/* TODO if(NickTop.getText().equals(Name)) {//хз работает или нет //нет!Идея была простая:сообщения отправленные тобой в правой части приложения.Реализация ужас!
 		        	connection.sendString("\t\t\t" + msq);
 		        }else {
 		        connection.sendString( "  " + Name + ": " + msq);
-		        }
+		        }*/
 		 	}
 		 	
 		    private void send_File() {
-	    		try {
-					 	sendFile = new SendString(this,IP_ADDR,PORT);
-					} catch (IOException e1) {
-						printMsq("Ошибка отправки файла: " + e1);
-					}
-				try {
-					f.showOpenDialog(null);
-				    File file = f.getSelectedFile();	
-					String input = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));					
-					String msq = input;
-					if(msq.equals("")) {	        	
-						eror = "Файл Пуст";
-						new LoginEror();
-						return;
-					}
-
-			        sendFile.sendFile( " " + Name + ": " + msq + "\n(Текст с файла)");
-
-				} catch (IOException e1) {
+		    		try {
+					 	//sendFile = new SendFile(this,IP_ADDR,PORT);	
+					 	f.showOpenDialog(null);
+					 	File file = f.getSelectedFile();	
+					 	String input = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+					 	if(input.equals("")) {	        	
+					 		eror = "Файл Пуст";
+					 		new LoginEror();
+					 		return;
+					 	}else {
+					 		connection.sendString( "  " + Name + ": " + input + "\n(Текст с файла)");
+					 		// TODO sendFile.sendFile(input);
+					 	}
+					 	
+	    		 } catch (IOException e1) {
 					e1.printStackTrace();
 				}
 	        }
