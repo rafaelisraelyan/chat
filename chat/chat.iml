@@ -7,6 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="swingx-1.6.1" level="project" />
+    <orderEntry type="library" name="Chatty" level="project" />
   </component>
 </module>

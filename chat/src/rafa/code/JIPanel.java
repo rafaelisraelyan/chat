@@ -1,4 +1,4 @@
-package rafa.code;
+/*package rafa.code;
 
 import org.jdesktop.swingx.JXPanel;
 
@@ -30,3 +30,4 @@ public class JIPanel extends JXPanel {
         super.paintComponent(g);
     }
 }
+*/

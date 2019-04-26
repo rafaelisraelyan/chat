@@ -44,9 +44,9 @@ public class Login extends JFrame {
         titleWindow.setFont(new Font("", Font.BOLD,13));
         titleWindow.setBorder(new EmptyBorder(5,5,5,5));
 
-        JLabel iconExit = new JLabel("❌");
+        JLabel iconExit = new JLabel("✕❌");
         iconExit.setForeground(Colors.mainTxtColor);
-        iconExit.setFont(new Font("", Font.BOLD,15));
+        iconExit.setFont(new Font("", Font.BOLD,19));
         iconExit.setBorder(new EmptyBorder(3,8,3,8));
         iconExit.addMouseListener(new MouseAdapter() {
             @Override

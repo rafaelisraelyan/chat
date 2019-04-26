@@ -1,4 +1,4 @@
-package rafa.code;
+/*package rafa.code;
 
 import com.alee.graphics.filters.GaussianFilter;
 import rafa.client.Client;
@@ -170,4 +170,4 @@ public class ShadowPane extends JPanel {
         }
         return maskedImage;
     }
-}
+}*/

@@ -110,16 +110,16 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
 
         JLabel titleWindow = new JLabel("Чат");
         titleWindow.setForeground(Colors.mainTxtColor);
-        titleWindow.setFont(new Font("", Font.BOLD,16));
-        titleWindow.setBorder(new EmptyBorder(2,2,2,2));
+        titleWindow.setFont(new Font("", Font.BOLD,15));
+        titleWindow.setBorder(new EmptyBorder(3,2,3,2));
 
         JPanel panelTitleWindow = new JPanel();
         panelTitleWindow.setBackground(Colors.mainColor);
 
-        JLabel iconExit = new JLabel("❌");
+        JLabel iconExit = new JLabel("✕");
         iconExit.setForeground(Colors.mainTxtColor);
-        iconExit.setFont(new Font("", Font.BOLD,13));
-        iconExit.setBorder(new EmptyBorder(3,8,3,8));
+        iconExit.setFont(new Font("", Font.BOLD,19));
+        iconExit.setBorder(new EmptyBorder(3,5,3,5));
         iconExit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -143,8 +143,8 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
         JLabel iconStretch = new JLabel();
         iconStretch.setText("⬜");
         iconStretch.setForeground(Colors.mainTxtColor);
-        iconStretch.setFont(new Font("",Font.BOLD,13));
-        iconStretch.setBorder(new EmptyBorder(3,8,3,8));
+        iconStretch.setFont(new Font("",Font.BOLD,12));
+        iconStretch.setBorder(new EmptyBorder(7,5,7,5));
         iconStretch.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -181,8 +181,8 @@ public class Client extends JFrame implements ActionListener,TCPConnectionListne
         JLabel iconHideWin = new JLabel();
         iconHideWin.setText("─");
         iconHideWin.setForeground(Colors.mainTxtColor);
-        iconHideWin.setBorder(new EmptyBorder(3,8,3,8));
-        iconHideWin.setFont(new Font("",Font.BOLD,15));
+        iconHideWin.setBorder(new EmptyBorder(5,7,5,7));
+        iconHideWin.setFont(new Font("",Font.BOLD,16));
         iconHideWin.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

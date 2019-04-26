@@ -1,6 +1,5 @@
 package rafa.client;
 
-import org.jdesktop.swingx.JXPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,12 +9,11 @@ import java.awt.event.MouseEvent;
 
 import static rafa.code.createIcon.createIcon;
 
-public class Settings extends JXPanel {
+public class Settings {
 
     private JFrame frame = new JFrame();
     private JPanel panelTop = new JPanel();
     private JPanel panelCenter = new JPanel();
-    private JPanel panelContent = new JPanel();
     private JPanel p = new JPanel();
 
     public static void main(String[] args) {
@@ -42,6 +40,7 @@ public class Settings extends JXPanel {
             }
         });
 
+        JPanel panelContent = new JPanel();
         panelContent.setBackground(Colors.sideColor);
         JScrollPane scroll = new JScrollPane(panelContent);
         scroll.setBackground(Colors.sideColor);
@@ -93,7 +92,6 @@ public class Settings extends JXPanel {
         frame.setAlwaysOnTop(true);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.getRootPane().setBorder(Client.shadows(0));
     }
 }
         /*panelMain.addMouseListener(new MouseAdapter() {
